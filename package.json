@@ -1,6 +1,6 @@
 {
   "name": "@panando/dsh-feynman-sessions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "DSH 里的 feynman 会话台：只读浏览 ~/.feynman/sessions 的会话，一键在右侧栏终端里全屏续跑。",
   "type": "module",
   "license": "MIT",

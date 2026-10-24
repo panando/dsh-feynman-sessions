@@ -78,6 +78,7 @@ dsh plugin install @panando/dsh-feynman-sessions
 | 没有终端服务或右侧栏服务 | 「继续」退化成「复制命令」，并说明原因 |
 | 终端标签 5 秒内没出现 | 提示超时，并把命令显示出来供手动粘贴 |
 | 终端 8 秒内不可写 | 同上 |
+| 命令写进终端后没有回显 | 提示「命令没被终端接收」，并把命令显示出来供手动粘贴 |
 | 终端数量到上限 | 提示先关掉不用的终端 |
 | 当前没选中 DSH 会话 | 提示先在左侧选中一个会话 |
 | 会话目录不存在 | 列表空状态并显示当前配置路径 |
@@ -108,6 +109,18 @@ await __dshFeynmanSessions.list()                // 直接看列表数据
 await __dshFeynmanSessions.session('<文件名>')   // 看详情数据
 __dshFeynmanSessions.lastContinue                // 上一次点「继续」停在哪一步
 ```
+
+### 排错
+
+每次点「继续」都会往 `~/.feynman/dsh-feynman-sessions-debug.log` 追加一行，含：
+
+- `result`：成功与否、失败码（`timeout` / `notWritable` / `writeDropped` / `failed` 等）、实际执行的命令；
+- `sidebar.screenSessionId`：右侧栏当时绑定的 DSH 会话；
+- `sidebar.adopted`：本面板所属会话的右栏状态是否已就绪；
+- `sidebar.tabs`：右栏当前所有标签（含终端标签）；
+- `openVia`：这次用的是 `openTabIn` 还是退回 `openTab`。
+
+日志路径可用环境变量 `DSH_FEYNMAN_SESSIONS_LOG` 改。日志只写本机，不发往任何地方。
 
 ## 文件
 
