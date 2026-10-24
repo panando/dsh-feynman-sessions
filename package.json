@@ -1,0 +1,61 @@
+{
+  "name": "@panando/dsh-feynman-sessions",
+  "version": "0.1.0",
+  "description": "DSH 里的 feynman 会话台：只读浏览 ~/.feynman/sessions 的会话，一键在右侧栏终端里全屏续跑。",
+  "type": "module",
+  "license": "MIT",
+  "author": "panando (https://github.com/panando)",
+  "homepage": "https://github.com/panando/dsh-feynman-sessions#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panando/dsh-feynman-sessions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/panando/dsh-feynman-sessions/issues"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0",
+    "dsh": "^0.2.1-rc.2"
+  },
+  "main": "./lib/index.js",
+  "exports": {
+    ".": { "default": "./lib/index.js" },
+    "./client": { "default": "./lib/client.js" },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "check": "node --check lib/index.js && node --check lib/client.js && node --check lib/parse.js && node --check lib/command.js",
+    "test": "node --test test/parse.test.mjs test/command.test.mjs",
+    "probe": "node tools/probe-host.mjs"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "feynman",
+    "sessions",
+    "terminal",
+    "sidebar"
+  ]
+}

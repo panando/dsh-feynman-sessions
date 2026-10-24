@@ -1,0 +1,8 @@
+# 插件自己的 bundle patch：声明"我由谁注入到全局树"。
+#
+# 铁律：下面的 id 必须与 lib/index.js 里 export const name 一致，
+# name 必须是 package.json#name 的完整值，否则宿主配置覆盖会静默失效
+# （详见 docs/01-architecture.md 第 4 节）。
+- insert:
+    - id: feynman-sessions
+      name: '@panando/dsh-feynman-sessions'
