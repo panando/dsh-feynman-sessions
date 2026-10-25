@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { buildResumeCommand, shellQuote } from "../lib/command.js";
+import { buildResumeCommand, buildStartCommand, shellQuote } from "../lib/command.js";
 
 test("普通路径：cd 到工作目录再接 --session", () => {
   assert.equal(
@@ -43,4 +43,39 @@ test("空文件路径抛错", () => {
 test("控制字符抛错（避免把整行命令拆坏）", () => {
   assert.throws(() => buildResumeCommand({ cwd: "/tmp", file: "/tmp/a\nb.jsonl" }), /control characters/);
   assert.throws(() => buildResumeCommand({ cwd: "/tmp/x\r", file: "/tmp/s.jsonl" }), /control characters/);
+});
+
+test("新会话命令：切到工作目录后直接启动，不带 --session", () => {
+  assert.equal(buildStartCommand({ cwd: "/Users/example/project" }), "cd '/Users/example/project' && 'feynman'");
+  assert.equal(buildStartCommand({}), "'feynman'");
+});
+
+test("新会话命令：环境变量写在命令前面，只对这一条命令生效", () => {
+  assert.equal(
+    buildStartCommand({ cwd: "/tmp/a b", env: [{ key: "FEYNMAN_TELEMETRY", value: "off" }, { key: "NO_COLOR", value: "1" }] }),
+    "cd '/tmp/a b' && FEYNMAN_TELEMETRY='off' NO_COLOR='1' 'feynman'"
+  );
+});
+
+test("新会话命令：工作目录必须是绝对路径", () => {
+  assert.throws(() => buildStartCommand({ cwd: "relative/dir" }), /absolute path/);
+  assert.throws(() => buildStartCommand({ cwd: "/tmp/x\ny" }), /control characters/);
+});
+
+test("续跑命令：环境变量写在 cd 之后、feynman 之前", () => {
+  assert.equal(
+    buildResumeCommand({
+      cwd: "/tmp/a b",
+      file: "/tmp/s.jsonl",
+      env: [{ key: "FEYNMAN_TELEMETRY", value: "off" }, { key: "NO_COLOR", value: "1" }]
+    }),
+    "cd '/tmp/a b' && FEYNMAN_TELEMETRY='off' NO_COLOR='1' 'feynman' --session '/tmp/s.jsonl'"
+  );
+});
+
+test("续跑命令：没有环境变量时与旧格式完全一致", () => {
+  assert.equal(
+    buildResumeCommand({ cwd: "/tmp", file: "/tmp/s.jsonl", env: [] }),
+    buildResumeCommand({ cwd: "/tmp", file: "/tmp/s.jsonl" })
+  );
 });

@@ -1,6 +1,6 @@
 {
   "name": "@panando/dsh-feynman-sessions",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "DSH 里的 feynman 会话台：只读浏览 ~/.feynman/sessions 的会话，一键在右侧栏终端里全屏续跑。",
   "type": "module",
   "license": "MIT",
@@ -42,8 +42,8 @@
     "access": "public"
   },
   "scripts": {
-    "check": "node --check lib/index.js && node --check lib/client.js && node --check lib/parse.js && node --check lib/command.js",
-    "test": "node --test test/parse.test.mjs test/command.test.mjs",
+    "check": "node --check lib/index.js && node --check lib/client.js && node --check lib/parse.js && node --check lib/command.js && node --check lib/env.js",
+    "test": "node --test test/parse.test.mjs test/command.test.mjs test/env.test.mjs",
     "probe": "node tools/probe-host.mjs"
   },
   "peerDependencies": {
